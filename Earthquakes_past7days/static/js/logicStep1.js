@@ -17,26 +17,28 @@ attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap
 //creates one variable that holds both layers
 let baseMaps = {
   "Streets": streets,
-  "Satellite": satelliteStreets
+  "Satellite Streets": satelliteStreets
 };
 
 // Create the map object with a center, zoom level, and default layer.
 let map = L.map('mapid', {
-  center: [39.5, -98.5],
-  zoom: 3,
+  center: [43.7, -79.3],
+  zoom: 11,
   layers: [streets]
 });
 
 //code for layer button using baseMaps
 L.control.layers(baseMaps).addTo(map);
 
-let earthquakes = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+let torontoData = "https://raw.githubusercontent.com/babsonr1/Mapping_Earthquakes/Mapping_GeoJSON_Linestrings/Mapping_GeoJSON_Linestrings/torontoRoutes.json";
+let torontoHoods = "https://raw.githubusercontent.com/babsonr1/Mapping_Earthquakes/Mapping_GeoJSON_Polygons/Mapping_GeoJSON_Polygons/torontoNeighborhoods.json";
 let myStyle = {
   color: "#0000ff",
   weight: 1,
+  fillColor: "#ffffa1"
 }
 
-d3.json(earthquakes).then(function(data) {
+d3.json(torontoHoods).then(function(data) {
   L.geoJSON(data, {
     style: myStyle,
     onEachFeature: function(feature, layer){

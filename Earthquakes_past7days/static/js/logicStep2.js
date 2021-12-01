@@ -17,7 +17,7 @@ attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap
 //creates one variable that holds both layers
 let baseMaps = {
   "Streets": streets,
-  "Satellite": satelliteStreets
+  "Satellite Streets": satelliteStreets
 };
 
 // Create the map object with a center, zoom level, and default layer.
@@ -31,16 +31,37 @@ let map = L.map('mapid', {
 L.control.layers(baseMaps).addTo(map);
 
 let earthquakes = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
-let myStyle = {
-  color: "#0000ff",
-  weight: 1,
+/*let myStyle = {
+  color: "#ffffa1",
+  weight: 2
+} */
+
+function styleInfo(feature) {
+  return {
+    opacity: 1,
+    fillOpacity: 1,
+    fillColor: "#ffae42",
+    color: "#000000",
+    radius: getRadius(),
+    stroke: true,
+    weight: 0.5
+  };
+}
+
+function getRadius(magnitude){
+  if (magnitude === 0) {
+    return 1;
+  }
+  return magnitude * 4;
 }
 
 d3.json(earthquakes).then(function(data) {
   L.geoJSON(data, {
-    style: myStyle,
-    onEachFeature: function(feature, layer){
-    layer.bindPopup("<h2>"+feature.properties.AREA_NAME+"</h2> <hr>");
-    }
+    pointToLayer: function(feature, latlng){
+      return L.circleMarker(latlng);
+      //.bindPopup("<h2>"+feature.properties.AREA_NAME+"</h2> <hr>");
+    },
+    style: styleInfo()
   }).addTo(map);
 });
+
