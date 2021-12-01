@@ -24,24 +24,25 @@ let baseMaps = {
 let map = L.map('mapid', {
   center: [43.7, -79.3],
   zoom: 11,
-  layers: [satelliteStreets]
+  layers: [streets]
 });
 
 //code for layer button using baseMaps
 L.control.layers(baseMaps).addTo(map);
 
 let torontoData = "https://raw.githubusercontent.com/babsonr1/Mapping_Earthquakes/Mapping_GeoJSON_Linestrings/Mapping_GeoJSON_Linestrings/torontoRoutes.json";
-let torontoHoods = "https://raw.githubusercontent.com/babsonr1/Mapping_Earthquakes/main/torontoNeighborhoods.json";
+let torontoHoods = "https://raw.githubusercontent.com/babsonr1/Mapping_Earthquakes/Mapping_GeoJSON_Polygons/Mapping_GeoJSON_Polygons/torontoNeighborhoods.json";
 let myStyle = {
-  color: "#ffffa1",
-  weight: 2
+  color: "#0000ff",
+  weight: 1,
+  fillColor: "#ffffa1"
 }
 
 d3.json(torontoHoods).then(function(data) {
-  L.geoJSON(data).addTo(map);// {
-    //style: myStyle,
-    //onEachFeature: function(feature, layer){
-    //layer.bindPopup("<h2>"+feature.properties.airline+"</h2> <hr> <h3>"+feature.properties.dst+"</h3>");
-    //}
-  //}).addTo(map);
+  L.geoJSON(data, {
+    style: myStyle,
+    onEachFeature: function(feature, layer){
+    layer.bindPopup("<h2>"+feature.properties.AREA_NAME+"</h2> <hr>");
+    }
+  }).addTo(map);
 });
