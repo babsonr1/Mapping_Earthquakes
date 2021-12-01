@@ -24,18 +24,23 @@ let baseMaps = {
 let map = L.map('mapid', {
   center: [44.0, -80.0],
   zoom: 2,
-  layers: [light]
+  layers: [dark]
 });
 
 //code for layer button using baseMaps
 L.control.layers(baseMaps).addTo(map);
 
-let airportData ="https://raw.githubusercontent.com/babsonr1/Mapping_Earthquakes/Mapping_GeoJSON_Points/Mapping_GeoJSON_Points/majorAirports.json";
+let torontoData = "https://raw.githubusercontent.com/babsonr1/Mapping_Earthquakes/Mapping_GeoJSON_Linestrings/Mapping_GeoJSON_Linestrings/torontoRoutes.json";
+let myStyle = {
+  color: "#ffffa1",
+  weight: 2
+}
 
-d3.json(airportData).then(function(data) {
+d3.json(torontoData).then(function(data) {
   L.geoJSON(data, {
+    style: myStyle,
     onEachFeature: function(feature, layer){
-      layer.bindPopup("<h2>"+feature.properties.faa+"</h2> <hr> <h3>"+feature.properties.name+"</h3>");
+      layer.bindPopup("<h2>"+feature.properties.airline+"</h2> <hr> <h3>"+feature.properties.dst+"</h3>");
     }
   }).addTo(map);
 });
