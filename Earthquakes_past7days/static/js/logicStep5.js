@@ -14,11 +14,13 @@ attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap
     accessToken: API_KEY
 });
 
+//creating overlays
 let earthquakes = new L.layerGroup();
 
+//creating keys for control.layers to access for overlays
 let overlays = {
   Earthquakes: earthquakes
-}
+};
 
 //creates one variable that holds both layers
 let baseMaps = {
@@ -37,12 +39,8 @@ let map = L.map('mapid', {
 L.control.layers(baseMaps, overlays).addTo(map);
 
 let earthquakelink = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
-/*let myStyle = {
-  color: "#ffffa1",
-  weight: 2
-} */
 
-
+//colors of mags of earthquakes
 function getColor(magnitude) {
   if (magnitude > 5) {
     return "#ea2c2c";
@@ -85,7 +83,6 @@ d3.json(earthquakelink).then(function(data) {
   L.geoJSON(data, {
     pointToLayer: function(feature, latlng){
       return L.circleMarker(latlng);
-      //.bindPopup("<h2>"+feature.properties.AREA_NAME+"</h2> <hr>");
     },
     style: styleInfo,
     onEachFeature: function(feature, layer) {
@@ -93,7 +90,34 @@ d3.json(earthquakelink).then(function(data) {
     }
   }).addTo(earthquakes);
 
-  
+  let legend = L.control({
+    position: "bottomright"
+  });
+
+  legend.onAdd = function() {
+    let div = L.DomUtil.create("div", "info legend");
+    let magnitudes = [0, 1, 2, 3, 4, 5];
+    let colors = [
+      "#98ee00",
+      "#d4ee00",
+      "#eecc00",
+      "#ee9c00",
+      "#ea822c",
+      "#ea2c2c"
+    ];
+
+    for (var i = 0; i < magnitudes.length; i++) {
+      div.innerHTML +=
+        "<i style='background: " + colors[i] + "'></i> " +
+        magnitudes[i] + (magnitudes[i + 1] ? "&ndash;" + magnitudes[i + 1] + "<br>" : "+");
+   }
+  return div;
+  };
+ 
+  legend.addTo(map);
+
   earthquakes.addTo(map);
+
+  
 });
 
